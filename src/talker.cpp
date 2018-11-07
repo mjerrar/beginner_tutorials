@@ -25,10 +25,32 @@
 
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "beginner_tutorials/ChangeStr.h"
 
+
+std::string msgModified;
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+bool changeCallback(beginner_tutorials::ChangeStr::Request &req,
+          beginner_tutorials::ChangeStr::Response &resp) {
+  ROS_DEBUG_STREAM("Size of String received :" + req.addText.size());
+  if (req.addText.size()>0) {
+    if (req.addText.size()<3) {
+      ROS_WARN_STREAM("Sent very short string, expecting at least 5 letters");
+    }
+    ROS_INFO_STREAM("Changing string");
+    msgModified = req.addText;
+    resp.success = true;
+    return true;
+  }
+  else {
+    ROS_ERROR_STREAM("empty string received");
+    return false;
+  }
+}
+
+
 int main(int argc, char **argv) {
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
@@ -66,9 +88,11 @@ int main(int argc, char **argv) {
    * than we can send them, the number here specifies how many messages to
    * buffer up before throwing some away.
    */
+  ros::ServiceServer changeStr = n.advertiseService("ChangeStr", &changeCallback);
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
   ros::Rate loop_rate(10);
+
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -82,8 +106,8 @@ int main(int argc, char **argv) {
     std_msgs::String msg;
 
     std::stringstream ss;
-    ss << "hello world " << count;
-    msg.data = ss.str();
+
+    msg.data = msgModified;
 
     ROS_INFO("%s", msg.data.c_str());
 
