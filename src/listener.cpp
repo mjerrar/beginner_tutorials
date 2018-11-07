@@ -1,4 +1,5 @@
-/**  Copyright (C) <2018>  <Jerrar Bukhari>
+/************************************************************************************
+/  Copyright (C) <2018>  <Jerrar Bukhari>
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -12,14 +13,15 @@
 *
 *    You should have received a copy of the GNU General Public License
 *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ ************************************************************************************/
 
 /**
- * @file    listner.cpp
- * @author  Jerrar Bukhari
+ *  @file    listener.cpp
+ *  @author  Jerrar Bukhari
+ *  @date    11/6/2018
  *
- * @brief This creates the subscriber node
- *
+ *  @brief Source file to implement a ROS publisher node and a service
+ *         server node
  */
 
 #include "ros/ros.h"
