@@ -35,16 +35,15 @@ std::string msgModified;
 bool changeCallback(beginner_tutorials::ChangeStr::Request &req,
           beginner_tutorials::ChangeStr::Response &resp) {
   ROS_DEBUG_STREAM("Size of String received :" + req.addText.size());
-  if (req.addText.size()>0) {
-    if (req.addText.size()<3) {
+  if (req.addText.size() > 0) {
+    if (req.addText.size() < 3) {
       ROS_WARN_STREAM("Sent very short string, expecting at least 5 letters");
     }
     ROS_INFO_STREAM("Changing string");
     msgModified = req.addText;
     resp.success = true;
     return true;
-  }
-  else {
+  } else {
     ROS_ERROR_STREAM("empty string received");
     return false;
   }
@@ -88,8 +87,10 @@ int main(int argc, char **argv) {
    * than we can send them, the number here specifies how many messages to
    * buffer up before throwing some away.
    */
-  ros::ServiceServer changeStr = n.advertiseService("ChangeStr", &changeCallback);
-  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+  ros::ServiceServer changeStr = n.advertiseService("ChangeStr",
+    &changeCallback);
+  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter",
+    1000);
 
   ros::Rate loop_rate(10);
 
