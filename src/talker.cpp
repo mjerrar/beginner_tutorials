@@ -23,10 +23,11 @@
  *  @brief Source file to implement a ROS publisher node and a service
  *         server node
  */
-
+#include <tf/transform_broadcaster.h>
 #include <sstream>
 
 #include "ros/ros.h"
+
 #include "std_msgs/String.h"
 #include "beginner_tutorials/ChangeStr.h"
 
@@ -67,7 +68,6 @@ bool changeCallback(beginner_tutorials::ChangeStr::Request &req,
  *   @return integer 0 for success
  */
 int main(int argc, char **argv) {
-
   ros::init(argc, argv, "talker");
 
   ros::NodeHandle n;
@@ -80,18 +80,25 @@ int main(int argc, char **argv) {
 
   ros::Rate loop_rate(10);
 
+  tf::TransformBroadcaster br;
+  tf::Transform transform;
+  transform.setOrigin(tf::Vector3(5.0, 5.0, 1.0));
+  tf::Quaternion q;
+  q.setRPY(0.0, 0.0, 1.571);
+  transform.setRotation(q);
+
   int count = 0;
   while (ros::ok()) {
-
     std_msgs::String msg;
-
-    std::stringstream ss;
 
     msg.data = msgModified;
 
     ROS_INFO("%s", msg.data.c_str());
 
     chatter_pub.publish(msg);
+
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),
+                                          "world", "talk"));
 
     ros::spinOnce();
 
