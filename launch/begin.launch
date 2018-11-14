@@ -1,0 +1,25 @@
+<launch>
+<arg 
+    name="record" 
+    default = "false"
+/>
+<node 
+    pkg = "beginner_tutorials" 
+    type = "talker"
+    name = "talker"
+    output = "screen"
+/>
+<node 
+    pkg = "beginner_tutorials" 
+    type = "listener"
+    name = "listener"
+    output = "screen"
+/>
+<node
+    pkg = "rosbag"
+    name = "record"
+    type = "record"
+    args = "-a -O $(find beginner_tutorials)/results/rosbag"
+    if = "$(arg record)"
+/>    
+</launch>
