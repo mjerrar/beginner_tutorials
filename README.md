@@ -79,51 +79,48 @@ To visualise the tree of frames, use the rqt_tf_tree tool. Launch the nodes usin
 ```
 rosrun rqt_tf_tree rqt_tf_tree
 ```
-This will open a new window showing 2 frames /world and /talk with other information such as braocast frequency and the time of transform. To update the transform, refresh the window using the button on the top left. To close the window, CRTL+C in the terminal.
+This will open a new window showing 2 frames /world and /talk with other information such as broacast frequency and the time of transform. To update the transform, refresh the window using the button on the top left. To close the window, CRTL+C in the terminal.
 
 ### Save TF tree in PDF
 The tree can be saved as a PDF using the view_frames tool. In a new terminal, navigate to the desired directory where the PDF is to be generated and run the following command:
 ```
 rosrun tf view_frames
 ```
-This tool listens to the TF broadcast for 5 seconds and saves the result in a pdf. To view the result run the following command:
-```
-evince frames.pdf
-```
-This will open the PDF displaying the current transform tree. A [sample output pdf](https://github.com/SrinidhiSreenath/beginner_tutorials/blob/Week11_HW/results/tfframesbroadcastoutput.pdf) exists in the results directory of the package.
+This tool listens to the TF broadcast for 5 seconds and saves the result in a pdf.
+You can view the pdf using a document viewer.
 
 ## Unit Testing with Rostest
-Test nodes are written to unit test the ROS Service call. Two unit tests are written, one that tests the succesful existence of the ROS service modifyOutput and the second one to test the success of the service call.
-To run the unit tests, execute the following in a new terminal
+Test nodes are written to unit test the ROS Service call.
+To run the unit tests, execute the following:
 ```
 cd <path to catkin_ws>
 catkin_make run_tests
 ```
-The tests will be built and executed and the results will shown in the terminal. A sample result is shown below:
+Succesful Test output:
 ```
-[ROSUNIT] Outputting test results to /home/srinidhi/catkin_ws/build/test_results/beginner_tutorials/rostest-test_talkerTest.xml
-[Testcase: testtalkerTest] ... ok
-
 [ROSTEST]-----------------------------------------------------------------------
 
-[beginner_tutorials.rosunit-talkerTest/testInitializationOfROSService][passed]
-[beginner_tutorials.rosunit-talkerTest/testROSServiceCall][passed]
+[beginner_tutorials.rosunit-talker_test/ChangeStrSrv][passed]
 
 SUMMARY
  * RESULT: SUCCESS
- * TESTS: 2
+ * TESTS: 1
  * ERRORS: 0
  * FAILURES: 0
 
-rostest log file is in /home/srinidhi/.ros/log/rostest-srisbharadwaj-13430.log
--- run_tests.py: verify result "/home/srinidhi/catkin_ws/build/test_results/beginner_tutorials/rostest-test_talkerTest.xml"
-```
+rostest log file is in /home/viki/.ros/log/rostest-ubuntu-17068.log
+-- run_tests.py: verify result "/home/viki/catkin_ws/build/test_results/beginner_tutorials/rostest-test_talker_test.xml"
+[100%] Built target _run_tests_beginner_tutorials_rostest_test_talker_test.test
+[100%] Built target _run_tests_beginner_tutorials_rostest
+[100%] Built target _run_tests_beginner_tutorials
+[100%] Built target run_tests
+
 
 To run the unit tests using the launch file, run the following commands in the catkin workspace after all the packages are succesfully built.
 ```
 cd <path to catkin_ws>
 source devel/setup.bash
-rostest beginner_tutorials talkerTest.launch 
+rostest beginner_tutorials talker_Test.test
 ```
 
 ## Dependencies 
