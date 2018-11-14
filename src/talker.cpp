@@ -23,6 +23,8 @@
  *  @brief Source file to implement a ROS publisher node and a service
  *         server node
  */
+
+// Headers
 #include <tf/transform_broadcaster.h>
 #include <sstream>
 
@@ -31,15 +33,14 @@
 #include "std_msgs/String.h"
 #include "beginner_tutorials/ChangeStr.h"
 
-
-std::string msgModified;
-
+// Global Variable to communicate between callback and main func
+std::string msgModified = "vacant";
 
 /**
  *   @brief  service callback fucntion to change text string
  *
- *   @param  req string data to send to change string to
- *           resp bool success status of service call
+ *   @param  req is string data to send to change string to
+ *           resp is bool success status of service call
  *   @return boolean true to indicate succesful service, false to
  *           indicate failure
  */
@@ -70,36 +71,54 @@ bool changeCallback(beginner_tutorials::ChangeStr::Request &req,
 int main(int argc, char **argv) {
   ros::init(argc, argv, "talker");
 
+
+  /**
+   * NodeHandle points to the current node for communication with 
+   * the rest of the ROS system
+   */
   ros::NodeHandle n;
 
+  /**
+   * Declaration of service server that will advertise its 
+   * availability to the ROS master
+   */
   ros::ServiceServer changeStr = n.advertiseService("ChangeStr",
     &changeCallback);
 
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter",
     1000);
-
+  // loop rate ensures publishing of commands at uniform intervals
   ros::Rate loop_rate(10);
 
+  // create broadcaster for transform
   tf::TransformBroadcaster br;
+  // create the transform object
   tf::Transform transform;
+  // set an arbitrary location vector
   transform.setOrigin(tf::Vector3(5.0, 5.0, 1.0));
+  /**
+   * quaternions are the method of choice for rotation representation
+   * in computer vision and robotics applications. Its does not suffer
+   * from gimbal lock.
+   */
   tf::Quaternion q;
   q.setRPY(0.0, 0.0, 1.571);
+  // set an arbitrary rotation vector for the transform
   transform.setRotation(q);
 
   int count = 0;
   while (ros::ok()) {
     std_msgs::String msg;
-
+    // update the msg to be published from global variable
     msg.data = msgModified;
 
     ROS_INFO("%s", msg.data.c_str());
-
+    // publsih msg to topic
     chatter_pub.publish(msg);
-
+    // broadcast the transform according to the parent child and time
+    // mentioned
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),
                                           "world", "talk"));
-
     ros::spinOnce();
 
     loop_rate.sleep();

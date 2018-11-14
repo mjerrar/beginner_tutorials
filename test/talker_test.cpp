@@ -19,8 +19,7 @@
  *  @author  Jerrar Bukhari
  *  @date    11/6/2018
  *
- *  @brief Source file to implement a ROS publisher node and a service
- *         server node
+ *  @brief Test cases for testing the talker node 
  */
 
 #include <ros/ros.h>
@@ -31,16 +30,28 @@
 #include <string>
 
 
-ros::NodeHandle nhs;
-
+/**
+ * @brief Test case to check the existence and success of calling
+ * the ChangeStr service 
+ * @param none
+ * @return none
+ */
 TEST(TESTSuite, ChangeStrSrv) {
+  // Create a node handle for this test
+  ros::NodeHandle nhs;
+  // create a service client object for service CHangeStr
   ros::ServiceClient client = nhs.serviceClient<beginner_tutorials
                                ::ChangeStr>("ChangeStr");
+  // create service call msg
   beginner_tutorials::ChangeStr srv;
   srv.request.addText = "a";
+  // wait for service to be created available
   EXPECT_TRUE(client.waitForExistence(ros::Duration(5)));
+  // call the CHangStr service
   EXPECT_TRUE(client.call(srv));
+  // service call should return success
   EXPECT_EQ(true, ros::service::call("ChangeStr", srv));
+  // confirm the name of current node
   EXPECT_EQ("/talker_test", ros::this_node::getName());
 }
 
